@@ -1,5 +1,36 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Workshop readiness</title></head>
-<body><main><h1>Student Project Tracker</h1><p>Readiness check passed. We will build the interface in Session 1.</p></main></body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Project Tracker</title>
+</head>
+<body>
+  <header>
+    <h1>Student Project Tracker</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Add Project</h2>
+      <form id="project-form">
+        <div>
+          <label for="project-name">Project Name:</label>
+          <input type="text" id="project-name" name="name" required placeholder="e.g., IoT Monitor">
+        </div>
+        <div>
+          <label for="project-status">Status:</label>
+          <input type="text" id="project-status" name="status" required placeholder="e.g., In Progress">
+        </div>
+        <button type="submit">Add Project</button>
+      </form>
+      <div id="message-container"></div>
+    </section>
+    <section>
+      <h2>Projects</h2>
+      <ul id="project-list">
+        <!-- Projects will be listed here -->
+      </ul>
+    </section>
+  </main>
+</body>
 </html>
