@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Project Tracker | Vibhashree S</title>
+<style>
+:root{--navy:#173b67;--blue:#2563eb;--pale:#eff6ff;--ink:#172033;--muted:#64748b;--line:#dbe3ee;--green:#15803d}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f4f7fb;color:var(--ink)}
+header{background:linear-gradient(120deg,#15365f,#2563eb);color:white;padding:26px 18px}
+.wrap{max-width:1050px;margin:auto}.brand{font-size:13px;opacity:.85;letter-spacing:.08em;text-transform:uppercase}.headrow{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}h1{margin:7px 0;font-size:clamp(24px,4vw,34px)}.identity{font-size:14px;line-height:1.7;opacity:.95}
+main{max-width:1050px;margin:24px auto;padding:0 16px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}.stat,.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 3px 12px #19365c0b}.stat{padding:18px}.stat span{display:block;color:var(--muted);font-size:13px}.stat strong{display:block;font-size:26px;margin-top:6px}.layout{display:grid;grid-template-columns: minmax(0,1fr) 330px;gap:18px;align-items:start}.panel{padding:20px}.panel h2{font-size:19px;margin:0 0 16px}.project{border:1px solid var(--line);border-radius:10px;padding:15px;margin:10px 0}.projecttop{display:flex;justify-content:space-between;gap:12px;align-items:start}.project h3{font-size:16px;margin:0 0 6px}.project p{color:var(--muted);font-size:13px;line-height:1.5;margin:4px 0}.tag{display:inline-block;border-radius:20px;padding:4px 9px;font-size:11px;background:var(--pale);color:var(--blue);font-weight:650}.empty{border:1px dashed #bdc9d8;border-radius:10px;text-align:center;padding:28px 14px;color:var(--muted);font-size:14px}
+label{display:block;font-size:13px;font-weight:650;margin:12px 0 6px}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;font-size:14px;background:white;color:var(--ink)}textarea{min-height:78px;resize:vertical}button{border:0;border-radius:9px;padding:11px 14px;font:inherit;font-weight:650;cursor:pointer}.primary{background:var(--blue);color:white;width:100%;margin-top:16px}.secondary{background:#e8eef8;color:#1e3a5f}.delete{background:#fff1f2;color:#be123c;padding:6px 9px;font-size:12px}.hint{font-size:12px;color:var(--muted);line-height:1.5}.footer{text-align:center;color:var(--muted);font-size:12px;padding:25px 12px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:13px}.stat strong{font-size:22px}.panel{padding:16px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brand">Student Project Tracker</div>
+  <div class="headrow"><div><h1>My Project Dashboard</h1><div class="identity"><strong>Vibhashree S</strong> · ECM-E · SRN: R25EP054</div></div><span class="tag" style="background:#ffffff24;color:white">Student Workspace</span></div>
+</div></header>
+<main>
+  <section class="stats">
+    <div class="stat"><span>Total Projects</span><strong id="total">0</strong></div>
+    <div class="stat"><span>In Progress</span><strong id="progress">0</strong></div>
+    <div class="stat"><span>Completed</span><strong id="completed">0</strong></div>
+  </section>
+  <div class="layout">
+    <section class="panel"><h2>My Projects</h2><div id="projectList" class="empty">No projects added yet. Use the form to add your first project.</div></section>
+    <aside class="panel"><h2>＋ Add Project</h2>
+      <form id="projectForm">
+        <label for="name">Project name *</label><input id="name" required placeholder="e.g. Smart Attendance System">
+        <label for="subject">Subject / Domain</label><input id="subject" placeholder="e.g. Web Development">
+        <label for="status">Status</label><select id="status"><option>In Progress</option><option>Not Started</option><option>Completed</option></select>
+        <label for="date">Due date</label><input id="date" type="date">
+        <label for="description">Description</label><textarea id="description" placeholder="Briefly describe your project"></textarea>
+        <button class="primary" type="submit">Add Project</button>
+      </form>
+      <p class="hint">Projects are saved in this browser on this device. This demo does not send data to a server.</p>
+    </aside>
+  </div>
+</main>
+<div class="footer">Student Project Tracker · Vibhashree S</div>
+<script>
+const KEY='vibhashree-student-projects-v1';
+let projects=[];try{projects=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){projects=[]}
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(KEY,JSON.stringify(projects));render()}
+function render(){
+ $('total').textContent=projects.length;
+ $('progress').textContent=projects.filter(p=>p.status==='In Progress').length;
+ $('completed').textContent=projects.filter(p=>p.status==='Completed').length;
+ const list=$('projectList');
+ if(!projects.length){list.className='empty';list.textContent='No projects added yet. Use the form to add your first project.';return}
+ list.className='';
+ list.innerHTML=projects.map(p=>`<article class="project"><div class="projecttop"><div><h3>${esc(p.name)}</h3><span class="tag">${esc(p.status)}</span></div><button class="delete" data-delete="${p.id}" type="button">Delete</button></div>${p.subject?`<p><strong>Domain:</strong> ${esc(p.subject)}</p>`:''}${p.date?`<p><strong>Due:</strong> ${esc(p.date)}</p>`:''}${p.description?`<p>${esc(p.description)}</p>`:''}</article>`).join('');
+ list.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>{projects=projects.filter(p=>p.id!==b.dataset.delete);save()}));
+}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('projectForm').addEventListener('submit',e=>{e.preventDefault();projects.unshift({id:Date.now().toString(),name:$('name').value.trim(),subject:$('subject').value.trim(),status:$('status').value,date:$('date').value,description:$('description').value.trim()});save();e.target.reset();});
+render();
+</script>
+</body>
+</html>
