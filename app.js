@@ -1,5 +1,4 @@
 import express from 'express';
-
 export function createApp(db) {
   const app = express();
   app.use(express.json());
@@ -43,7 +42,6 @@ export function createApp(db) {
     const row = await db.create(project);
     res.status(201).json(row);
   });
-
   app.get('/api/projects/:id', async (req, res) => {
     const id = readId(req, res);
     if (id === null) return;
