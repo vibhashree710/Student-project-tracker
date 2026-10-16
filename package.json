@@ -1,5 +1,8 @@
-"scripts": {
-  "start": "node server.js",
-  "build": "node server.js",
-  "test": "node --test test/*.test.js"
+
+{
+  "scripts": {
+    "start": "node server.js",
+    "build": "node server.js",
+    "test": "node --test test/*.test.js"
+  }
 }
