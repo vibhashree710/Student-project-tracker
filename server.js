@@ -1,13 +1,23 @@
 import express from 'express';
 import sqlite3 from 'sqlite3';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
+// Explicitly serve index.html at the root URL
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Database and API routes...
 const dbPath = process.env.NODE_ENV === 'production' 
   ? path.join('/tmp', 'database.sqlite') 
   : './database.sqlite';
@@ -21,10 +31,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
       studentName TEXT
     )`);
   }
-});
-
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
 });
 
 app.get('/api/projects', (req, res) => {
@@ -42,12 +48,5 @@ app.post('/api/projects', (req, res) => {
     res.json({ id: this.lastID, name, description, studentName });
   });
 });
-
-if (process.env.NODE_ENV !== 'production') {
-  const port = Number(process.env.PORT || 3000);
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-}
 
 export default app;
