@@ -1,5 +1,7 @@
+import express from 'express';
+
 export function createApp(db) {
-  const app = express(); // or whatever your app initialization is
+  const app = express();
 
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
