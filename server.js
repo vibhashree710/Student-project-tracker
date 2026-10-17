@@ -12,16 +12,22 @@ app.get('/', (req, res) => {
 });
 
 app.get(['/projects', '/api/projects'], (req, res) => {
-  res.json(projects);
+  const formattedProjects = projects.map(p => ({
+    ...p,
+    status: p.status || p.description || 'In Progress',
+    description: p.description || p.status || 'In Progress'
+  }));
+  res.json(formattedProjects);
 });
 
 app.post(['/projects', '/api/projects'], (req, res) => {
-  const { name, status } = req.body;
+  const { name, status, description } = req.body;
+  const val = status || description || 'In Progress';
   const newProject = {
     id: projects.length + 1,
     name: name || 'Untitled Project',
-    status: status || 'In Progress',
-    description: status || 'In Progress',
+    status: val,
+    description: val,
     studentName: 'Student'
   };
   projects.push(newProject);
