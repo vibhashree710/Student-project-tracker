@@ -11,31 +11,16 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/projects', (req, res) => {
+app.get(['/projects', '/api/projects'], (req, res) => {
   res.json(projects);
 });
 
-app.get('/api/projects', (req, res) => {
-  res.json(projects);
-});
-
-app.post('/projects', (req, res) => {
+app.post(['/projects', '/api/projects'], (req, res) => {
   const { name, status } = req.body;
   const newProject = {
     id: projects.length + 1,
     name: name || 'Untitled Project',
-    description: status || 'In Progress',
-    studentName: 'Student'
-  };
-  projects.push(newProject);
-  res.json(newProject);
-});
-
-app.post('/api/projects', (req, res) => {
-  const { name, status } = req.body;
-  const newProject = {
-    id: projects.length + 1,
-    name: name || 'Untitled Project',
+    status: status || 'In Progress',
     description: status || 'In Progress',
     studentName: 'Student'
   };
